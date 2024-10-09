@@ -1,9 +1,13 @@
+import React from 'react'
 import { useSelector } from "react-redux";
 import ProductCard from "./ProductCards";
+import { useCateogry } from "../api";
 
-function ElectronicsPage() {
-  const data = useSelector((state) => state.state);
-console.log(data,'data_____')
+const ElectronicsPage:React.FC=()=> {
+
+  useCateogry("electronics")
+  const data = useSelector((state:any) => state.state);
+ 
   return (
     <div style={{ margin: "50px" }}>
       <ProductCard products={data.products} />

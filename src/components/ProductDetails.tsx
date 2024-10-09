@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
@@ -16,12 +16,12 @@ import AddIcon from "@mui/icons-material/Add";
 import { addToCart, setQuantities } from "../redux/userCartSlice";
 
 
-const ProductDetail = () => {
-  const [product, setProduct] = useState({});
+const ProductDetail:React.FC = () => {
+  const [product, setProduct] = useState<any>({});
   const { id: i } = useParams();
 
   //   const data = useSelector((state) => state.cart);
-  const state = useSelector((state) => state);
+  const state = useSelector((state:any) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //  const cartData = useSelector((state) => state.cart);
@@ -39,7 +39,7 @@ const ProductDetail = () => {
     dispatch(addToCart(product));
   };
 
-  const handleIncreaseQuantity = (id) => {
+  const handleIncreaseQuantity = (id:number) => {
     dispatch(setQuantities({ type: "increment", id }));
   };
 

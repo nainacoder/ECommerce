@@ -1,3 +1,4 @@
+import React  from "react";
 import {
   Card,
   CardContent,
@@ -8,8 +9,8 @@ import {
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const UserDetails = () => {
-  const data = useSelector((state) => state.state);
+const UserDetails:React.FC = () => {
+  const data = useSelector((state:any) => state.state);
   const navigate = useNavigate();
 
   const { name, email, username, phone, address } = data.user;

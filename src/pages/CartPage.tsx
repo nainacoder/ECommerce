@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button, Modal, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { clearCart, setQuantities } from "../redux/userCartSlice";
@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 
 const CartPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [selectedId, setSelectedId] = useState(null);
+  const [selectedId, setSelectedId] = useState<any>();
   const dispatch = useDispatch();
-  const cartData = useSelector((state) => state.cart);
+  const cartData = useSelector((state: any) => state.cart);
   const navigate = useNavigate();
 
-  const handleIncreaseQuantity = (id) => {
+  const handleIncreaseQuantity = (id: number) => {
     dispatch(setQuantities({ type: "increment", id }));
   };
 
@@ -35,17 +35,19 @@ const CartPage = () => {
   };
 
   const totalProducts = Object.values(cartData.quantities).reduce(
-    (total, item) => total + item,
+    (total: number, item: any) => total + item,
     0
   );
 
-  const totalPrice = cartData.productsIncart.reduce((total, item) => {
-    return total + item.price * cartData.quantities[item.id];
-  }, 0);
+  const totalPrice = cartData.productsIncart.reduce(
+    (total: number, item: any) => {
+      return total + item.price * cartData.quantities[item.id];
+    },
+    0
+  );
 
-
-  console.log(totalProducts, 'totalProducts')
-console.log(cartData,'cartData')
+  console.log(totalProducts, "totalProducts");
+  console.log(cartData, "cartData");
 
   return (
     <div
@@ -56,8 +58,7 @@ console.log(cartData,'cartData')
         backgroundSize: "cover",
         height: "100vh",
         backgroundBlendMode: "multiply",
-      }}
-    >
+      }}>
       <div
         style={{
           flex: 3,
@@ -66,10 +67,29 @@ console.log(cartData,'cartData')
           backgroundColor: "rgba(255, 255, 255, 0.9)",
           borderRadius: "8px",
           padding: "20px",
-        }}
-      >
-        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+        }}>
+        <h2
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "center",
+            marginTop: "20px",
+            width: "100%",
+          }}>
           Cart: {cartData.productsIncart.length} items
+          {cartData.productsIncart.length === 0 && (
+            <Button
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                mt: 10,
+              }}
+              variant="text"
+              href="/home">
+              Add Some items
+            </Button>
+          )}
         </h2>
 
         {cartData.productsIncart.map((product) => (
@@ -85,8 +105,7 @@ console.log(cartData,'cartData')
               marginBottom: "10px",
               boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
               backgroundColor: "white",
-            }}
-          >
+            }}>
             {/* Product Image and Title */}
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
@@ -114,8 +133,7 @@ console.log(cartData,'cartData')
               <div style={{ display: "flex", alignItems: "center" }}>
                 <Button
                   variant="outlined"
-                  onClick={() => handleDecreaseQuantity(product)}
-                >
+                  onClick={() => handleDecreaseQuantity(product)}>
                   -
                 </Button>
                 <span style={{ margin: "0 10px" }}>
@@ -123,8 +141,7 @@ console.log(cartData,'cartData')
                 </span>
                 <Button
                   variant="outlined"
-                  onClick={() => handleIncreaseQuantity(product.id)}
-                >
+                  onClick={() => handleIncreaseQuantity(product.id)}>
                   +
                 </Button>
               </div>
@@ -143,8 +160,7 @@ console.log(cartData,'cartData')
           marginLeft: "20px",
           backgroundColor: "rgba(255, 255, 255, 0.9)",
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-        }}
-      >
+        }}>
         <h3 style={{ textAlign: "center" }}>Summary</h3>
         <p>Total products: {totalProducts}</p>
         <p style={{ fontWeight: "bold" }}>
@@ -155,8 +171,7 @@ console.log(cartData,'cartData')
           color="primary"
           onClick={handleClearCart}
           fullWidth
-           disabled={cartData.productsIncart.length === 0}
-        >
+          disabled={cartData.productsIncart.length === 0}>
           Proceed to Buy
         </Button>
       </div>
@@ -173,15 +188,13 @@ console.log(cartData,'cartData')
             p: 4,
             borderRadius: "8px",
             boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-          }}
-        >
+          }}>
           <h3>Remove {selectedId?.title}?</h3>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <Button
               variant="contained"
               color="secondary"
-              onClick={confirmRemove}
-            >
+              onClick={confirmRemove}>
               Yes, Remove
             </Button>
             <Button onClick={() => setModalOpen(false)}>Cancel</Button>

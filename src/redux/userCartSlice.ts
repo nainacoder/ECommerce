@@ -23,7 +23,7 @@ const userCartSlice = createSlice({
         if (state.quantities[action.payload.id] === 1) {
           delete state.quantities[action.payload.id];
           let data = state.productsIncart?.filter(
-            (item) => item.id !== action.payload.id
+            (item: any) => item.id !== action.payload.id
           );
           state.productsIncart = data;
           return state;
@@ -37,7 +37,7 @@ const userCartSlice = createSlice({
         };
       }
     },
-    addToCart: (state, action) => {
+    addToCart: (state: any, action) => {
       return {
         ...state,
         productsIncart: [...state.productsIncart, action.payload],

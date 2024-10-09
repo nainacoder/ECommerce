@@ -46,6 +46,9 @@ const Header: React.FC=() =>{
 
   function fetchDataFromApi() {
     const token = sessionStorage.getItem("jwtToken");
+    if(!token){
+      navigate('/login')
+    }
     const decodedToken = decodeJWT(token);
 
     const useId = decodedToken.payload.sub;
@@ -74,7 +77,7 @@ const Header: React.FC=() =>{
 
   const clearUserDataFromSessionStorage = () => {
     sessionStorage.clear();
-    navigate("/");
+    navigate("/login");
   };
 
   const handleCloseUserMenu = (setting) => {

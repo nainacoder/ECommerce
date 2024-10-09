@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAllProducts } from "../redux/userSlice";
@@ -6,11 +6,11 @@ import ProductCard from "../pages/ProductCards";
 import { Chip, Stack } from "@mui/material";
 
 function CategoryChips() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [activeChip, setActiveChip] = useState("All Products");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector((state) => state.state);
+  const data = useSelector((state:any) => state.state);
 
   const fetchCategories = () => {
     fetch("https://fakestoreapi.com/products/categories")
@@ -29,9 +29,9 @@ function CategoryChips() {
       fetchProducts();
       navigate(`/home}`);
     } else {
-      fetch(`https://fakestoreapi.com/products/category/${category}`)
-        .then((res) => res.json())
-        .then((json) => dispatch(setAllProducts(json)));
+      // fetch(`https://fakestoreapi.com/products/category/${category}`)
+      //   .then((res) => res.json())
+      //   .then((json) => dispatch(setAllProducts(json)));
 
       navigate(`/${category}`);
     }

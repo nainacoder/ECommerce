@@ -1,8 +1,8 @@
-// import { useEffect } from "react";
+import React from "react";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const SuccessPage = () => {
+const SuccessPage :React.FC= () => {
   const navigate = useNavigate();
 
   return (

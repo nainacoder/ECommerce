@@ -1,5 +1,6 @@
-import React,{ ChangeEvent, useState } from "react";
+import React,{ ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import loginImage from '../assets/images/login.jpg';
 import { Box, Button, TextField, Typography} from "@mui/material";
 
 const Login = () => {
@@ -40,29 +41,37 @@ const Login = () => {
       validationError.password = "password lenght should be atleast 6 char";
     }
 
-    function checkUserDetails() {
-      fetch("https://fakestoreapi.com/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: inputFields.email,
-          password: inputFields.password,
-        }),
-      })
-        .then((res) => res.json())
-        .then((json) => {
-          sessionStorage.setItem("jwtToken", json.token);
-          navigate("/home");
+    async function checkUserDetails() {
+      try{
+        const response=await fetch("https://fakestoreapi.com/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: inputFields.email,
+            password: inputFields.password,
+          }),
         })
-        .catch((error) => {
-          isValidate = false;
-          validationError.password = "Wrong password";
-          setError(validationError);
-          setValidate(isValidate);
-          setError1(error)
-        });
+        const data=await response.json()
+        sessionStorage.setItem("jwtToken", data.token);
+        navigate("/home");
+          // .then((res) => res.json())
+          // .then((json) => {
+          //   sessionStorage.setItem("jwtToken", json.token);
+          //   navigate("/home");
+          // })
+          // .catch((error) => {
+            
+          // });
+      }catch(error){
+        isValidate = false;
+        validationError.password = "Wrong password";
+        setError(validationError);
+        setValidate(isValidate);
+        setError1(error)
+      }
+      
     }
 
     checkUserDetails();
@@ -70,14 +79,25 @@ const Login = () => {
   // const loginImage = '../assets/images/login.jpg';
   const isDisabled = inputFields.email && inputFields.password;
 
+// const ParentStyle={
+//   display: "flex",
+//   justifyContent: "flex-end", // Align the form to the right
+//   alignItems: "center",
+//   minHeight: "100vh",
+//   // background: `url(${loginImage}) no-repeat center center/cover`,
+//   paddingRight: "50px",
+//   paddingLeft: "50px",
+// }
 const ParentStyle={
-  display: "flex",
-  justifyContent: "flex-end", // Align the form to the right
-  alignItems: "center",
-  minHeight: "100vh",
-  // background: `url(${loginImage}) no-repeat center center/cover`,
-  paddingRight: "50px",
-  paddingLeft: "50px",
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  height: "100vh",
+  overflow: 'hidden',
+  position: 'fixed',
+  width:'100vw',
+  background: `url(${loginImage}) no-repeat center center/cover`  
 }
 
 const FormStyle={
@@ -89,16 +109,18 @@ const FormStyle={
   borderRadius: "15px",
   boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
 }
+useEffect(()=>{
+  const token = sessionStorage.getItem("jwtToken");
+  if(token)
+  {
+    navigate('/home')
+    return;
+  }
+},[])
   return (
-    <Box
-      sx={ParentStyle}
-    >
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={FormStyle}
-      >
-        <Typography variant="h4" gutterBottom color="primary">
+    <Box sx={ParentStyle}>
+      <Box sx={FormStyle}>
+        <Typography variant="h4" gutterBottom color="primary" sx={{alignSelf:'center'}}>
          Login
         </Typography>
         {!validate && (
@@ -129,6 +151,7 @@ const FormStyle={
           type="submit"
           variant="contained"
           color="primary"
+          onClick={handleSubmit}
           sx={{
             mt: 3,
             mb: 2,
@@ -141,7 +164,7 @@ const FormStyle={
         </Button>
         {error1 && <h6>{error1}</h6>}
       </Box>
-    </Box>
+     </Box>
   );
 };
 

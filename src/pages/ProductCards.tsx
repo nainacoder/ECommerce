@@ -1,4 +1,5 @@
-import PropTypes from "prop-types";
+import React from 'react'
+// import PropTypes from "prop-types";
 import {
   Card,
   CardMedia,
@@ -18,7 +19,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 const ProductCard = ({ products }) => {
   const dispatch = useDispatch();
-  const cartData = useSelector((state) => state.cart);
+  const cartData = useSelector((state:any) => state.cart);
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
@@ -26,11 +27,11 @@ const ProductCard = ({ products }) => {
     dispatch(addToCart(product));
   };
 
-  const handleIncreaseQuantity = (id) => {
+  const handleIncreaseQuantity = (id:string) => {
     dispatch(setQuantities({ type: "increment", id }));
   };
 
-  const handleDecreaseQuantity = (id) => {
+  const handleDecreaseQuantity = (id:string) => {
     dispatch(setQuantities({ type: "decrement", id }));
   };
 
@@ -133,8 +134,8 @@ const ProductCard = ({ products }) => {
   );
 };
 
-ProductCard.propTypes = {
-  products: PropTypes.array.isRequired,
-};
+// ProductCard.propTypes = {
+//   products: PropTypes.array.isRequired,
+// };
 
 export default ProductCard;
