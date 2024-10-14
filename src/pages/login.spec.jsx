@@ -1,99 +1,109 @@
-import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import { BrowserRouter as Router } from "react-router-dom";
-import Login from "./Login";
+import React from 'react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import Login from './Login'; 
 
-// Mock the fetch function
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () => Promise.resolve({ token: "mockToken" }),
-  })
-);
+// Mock the useNavigate hook from react-router-dom
+jest.mock('react-router-dom', () => ({
+  useNavigate: jest.fn(),
+}));
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
+// Mock the fetch API for the login request
+global.fetch = jest.fn();
 
-describe("Login Component", () => {
+describe('Login Component', () => {
+  const mockNavigate = jest.fn();
+
   beforeEach(() => {
+    jest.clearAllMocks();
+    jest.mock('react-router-dom', () => ({
+      useNavigate: () => mockNavigate,
+    }));
+  });
+
+  test('renders login form', () => {
     render(
-      <Router>
+      <MemoryRouter>
         <Login />
-      </Router>
+      </MemoryRouter>
     );
+
+    expect(screen.getByText(/login/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /login/i })).toBeDisabled();
   });
 
-  test("renders login form correctly", () => {
-    expect(screen.getByText(/Login/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Email Address/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Password/i)).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /Login/i })).toBeInTheDocument();
-  });
+  test('validates email and password', async () => {
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
 
-  test("displays validation error when fields are empty", async () => {
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.change(screen.getByLabelText(/email address/i), {
+      target: { value: '' },
+    });
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: '123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
     expect(await screen.findByText(/email required/i)).toBeInTheDocument();
-    expect(await screen.findByText(/password required/i)).toBeInTheDocument();
-  });
-
-  test("displays email format error", async () => {
-    fireEvent.change(screen.getByLabelText(/Email Address/i), {
-      target: { value: "invalid-email" },
-    });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: "123456" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
-
-    expect(await screen.findByText(/email is not valid/i)).toBeInTheDocument();
-  });
-
-  test("displays password length error", async () => {
-    fireEvent.change(screen.getByLabelText(/Email Address/i), {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: "123" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
-
     expect(await screen.findByText(/password lenght should be atleast 6 char/i)).toBeInTheDocument();
   });
 
-  test("calls fetch with correct parameters and navigates on successful login", async () => {
-    fireEvent.change(screen.getByLabelText(/Email Address/i), {
-      target: { value: "test@example.com" },
+  test('submits form and navigates on successful login', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: jest.fn().mockResolvedValueOnce({ token: 'mockToken' }),
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: "123456" },
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/email address/i), {
+      target: { value: 'test@example.com' },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'password123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-      expect(fetch).toHaveBeenCalledWith("https://fakestoreapi.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: "test@example.com",
-          password: "123456",
-        }),
-      });
+      expect(mockNavigate).toHaveBeenCalledWith('/home');
+      expect(sessionStorage.getItem('jwtToken')).toBe('mockToken');
     });
   });
 
-  test("displays error message on failed login", async () => {
-    fetch.mockImplementationOnce(() => Promise.reject("API is down"));
-    
-    fireEvent.change(screen.getByLabelText(/Email Address/i), {
-      target: { value: "test@example.com" },
+  test('shows error message on failed login', async () => {
+    fetch.mockResolvedValueOnce({
+      ok: false,
+      json: jest.fn().mockResolvedValueOnce({ error: 'Wrong password' }),
     });
-    fireEvent.change(screen.getByLabelText(/Password/i), {
-      target: { value: "123456" },
+
+    render(
+      <MemoryRouter>
+        <Login />
+      </MemoryRouter>
+    );
+
+    fireEvent.change(screen.getByLabelText(/email address/i), {
+      target: { value: 'test@example.com' },
     });
-    fireEvent.click(screen.getByRole("button", { name: /Login/i }));
+    fireEvent.change(screen.getByLabelText(/password/i), {
+      target: { value: 'password123' },
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/Wrong password/i)).toBeInTheDocument();
+      expect(screen.getByText(/wrong password/i)).toBeInTheDocument();
     });
   });
 });

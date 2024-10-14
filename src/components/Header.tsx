@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/userSlice";
@@ -19,19 +19,19 @@ import MenuIcon from "@mui/icons-material/Menu";
 const pages = ["Products", "Pricing", "Blog"];
 const settings = ["Profile", "Logout"];
 
-const Header: React.FC=() =>{
+const Header: React.FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const navigate = useNavigate();
 
-  const data = useSelector((state:any) => state.state);
-  const cart = useSelector((state:any) => state.cart);
+  const data = useSelector((state: any) => state.state);
+  const cart = useSelector((state: any) => state.cart);
 
   const dispatch = useDispatch();
   const location = useLocation();
 
-  const decodeJWT = (token:any) => {
+  const decodeJWT = (token: any) => {
     const [header, payload, signature] = token.split(".");
 
     const decodedHeader = JSON.parse(atob(header));
@@ -46,8 +46,8 @@ const Header: React.FC=() =>{
 
   function fetchDataFromApi() {
     const token = sessionStorage.getItem("jwtToken");
-    if(!token){
-      navigate('/login')
+    if (!token) {
+      navigate("/login");
     }
     const decodedToken = decodeJWT(token);
 
@@ -82,28 +82,25 @@ const Header: React.FC=() =>{
 
   const handleCloseUserMenu = (setting) => {
     setAnchorElUser(null);
-    if(setting === "Profile"){
-      navigate(`/home/${setting}`)
+    if (setting === "Profile") {
+      navigate(`/home/${setting}`);
     }
-      if(setting=== "Logout"){
-        clearUserDataFromSessionStorage()
-      };
+    if (setting === "Logout") {
+      clearUserDataFromSessionStorage();
+    }
   };
 
-  console.log("user", data.user);
   return (
     <AppBar
       position="sticky"
       sx={{
         background: "linear-gradient(to right, #4ECDC4, #556270)",
         boxShadow: "0 4px 10px rgba(0, 0, 0, 0.3)",
-      }}
-    >
+      }}>
       <Container maxWidth="xl">
         <Toolbar
           disableGutters
-          sx={{ display: "flex", justifyContent: "space-between" }}
-        >
+          sx={{ display: "flex", justifyContent: "space-between" }}>
           {/* Large screen brand logo */}
           <Typography
             variant="h6"
@@ -118,10 +115,9 @@ const Header: React.FC=() =>{
               letterSpacing: ".15rem",
               textDecoration: "none",
               color: "#FFD700",
-              cursor:'pointer'
-            }}
-          >
-           Shopping Land
+              cursor: "pointer",
+            }}>
+            Shopping Land
           </Typography>
 
           {/* Mobile menu icon */}
@@ -132,8 +128,7 @@ const Header: React.FC=() =>{
               aria-controls="menu-appbar"
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
-              color="inherit"
-            >
+              color="inherit">
               <MenuIcon />
             </IconButton>
             <Menu
@@ -150,16 +145,14 @@ const Header: React.FC=() =>{
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
-              sx={{ display: { xs: "block", md: "none" } }}
-            >
+              sx={{ display: { xs: "block", md: "none" } }}>
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
                   <Typography
                     sx={{
                       textAlign: "center",
                       fontFamily: "'Roboto', sans-serif",
-                    }}
-                  >
+                    }}>
                     {page}
                   </Typography>
                 </MenuItem>
@@ -182,10 +175,9 @@ const Header: React.FC=() =>{
               letterSpacing: ".15rem",
               color: "inherit",
               textDecoration: "none",
-              cursor:'pointer'
-            }}
-          >
-           Shopping Land
+              cursor: "pointer",
+            }}>
+            Shopping Land
           </Typography>
 
           {/* Right-side: Cart and User Info */}
@@ -194,8 +186,7 @@ const Header: React.FC=() =>{
               display: "flex",
               alignItems: "center",
               gap: 2, // Adds space between the cart and user info
-            }}
-          >
+            }}>
             {/* Cart Section */}
             {location.pathname !== "/cartPage" && (
               <Tooltip title="Open Cart">
@@ -209,12 +200,10 @@ const Header: React.FC=() =>{
                     "&:hover": {
                       background: "#FFB300",
                     },
-                  }}
-                >
+                  }}>
                   <Badge
                     badgeContent={cart.productsIncart.length}
-                    color="secondary"
-                  >
+                    color="secondary">
                     <ShoppingCartIcon />
                   </Badge>
                 </IconButton>
@@ -231,8 +220,7 @@ const Header: React.FC=() =>{
                   color: "#FFFFFF",
                   mr: 1,
                   whiteSpace: "nowrap", // Ensures the name doesn't break onto a new line
-                }}
-              >
+                }}>
                 {data?.user?.name?.firstname} {data?.user?.name?.lastname}
               </Typography>
               <Tooltip title="Open user settings">
@@ -249,7 +237,7 @@ const Header: React.FC=() =>{
 
           {/* User Menu */}
           <Menu
-            sx={{ mt: "45px"}}
+            sx={{ mt: "45px" }}
             id="menu-appbar"
             anchorEl={anchorElUser}
             anchorOrigin={{
@@ -262,18 +250,15 @@ const Header: React.FC=() =>{
               horizontal: "right",
             }}
             open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
+            onClose={handleCloseUserMenu}>
             {settings.map((setting) => (
               <MenuItem
                 key={setting}
-                onClick={() => handleCloseUserMenu(setting)}
-              >
+                onClick={() => handleCloseUserMenu(setting)}>
                 <Typography
                   sx={{
                     textAlign: "center",
-                  }}
-                >
+                  }}>
                   {setting}
                 </Typography>
               </MenuItem>
@@ -283,5 +268,5 @@ const Header: React.FC=() =>{
       </Container>
     </AppBar>
   );
-}
+};
 export default Header;

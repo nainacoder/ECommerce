@@ -1,7 +1,7 @@
-import React,{ ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import loginImage from '../assets/images/login.jpg';
-import { Box, Button, TextField, Typography} from "@mui/material";
+import loginImage from "../assets/images/login.jpg";
+import { Box, Button, TextField, Typography } from "@mui/material";
 
 const Login = () => {
   const [inputFields, setInputFields] = useState({
@@ -9,12 +9,12 @@ const Login = () => {
     password: "",
   });
 
-  const [error, setError] = useState({email:"",password:""});
+  const [error, setError] = useState({ email: "", password: "" });
   const [validate, setValidate] = useState(true);
-  const [error1, setError1] = useState(null)
+  const [error1, setError1] = useState(null);
   const navigate = useNavigate();
-  
-  const handleInputChange = (e:ChangeEvent<HTMLInputElement>) => {
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setInputFields({
       ...inputFields,
@@ -24,7 +24,7 @@ const Login = () => {
 
   const handleSubmit = () => {
     let isValidate = true;
-    let validationError = {email:'', password:''};
+    let validationError = { email: "", password: "" };
     if (inputFields.email === "" || inputFields.email === null) {
       isValidate = false;
       validationError.email = "email required";
@@ -42,8 +42,8 @@ const Login = () => {
     }
 
     async function checkUserDetails() {
-      try{
-        const response=await fetch("https://fakestoreapi.com/auth/login", {
+      try {
+        const response = await fetch("https://fakestoreapi.com/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -52,76 +52,63 @@ const Login = () => {
             username: inputFields.email,
             password: inputFields.password,
           }),
-        })
-        const data=await response.json()
+        });
+        const data = await response.json();
         sessionStorage.setItem("jwtToken", data.token);
         navigate("/home");
-          // .then((res) => res.json())
-          // .then((json) => {
-          //   sessionStorage.setItem("jwtToken", json.token);
-          //   navigate("/home");
-          // })
-          // .catch((error) => {
-            
-          // });
-      }catch(error){
+      } catch (error) {
         isValidate = false;
         validationError.password = "Wrong password";
         setError(validationError);
         setValidate(isValidate);
-        setError1(error)
+        setError1(error);
       }
-      
     }
 
     checkUserDetails();
   };
-  // const loginImage = '../assets/images/login.jpg';
+
   const isDisabled = inputFields.email && inputFields.password;
 
-// const ParentStyle={
-//   display: "flex",
-//   justifyContent: "flex-end", // Align the form to the right
-//   alignItems: "center",
-//   minHeight: "100vh",
-//   // background: `url(${loginImage}) no-repeat center center/cover`,
-//   paddingRight: "50px",
-//   paddingLeft: "50px",
-// }
-const ParentStyle={
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  height: "100vh",
-  overflow: 'hidden',
-  position: 'fixed',
-  width:'100vw',
-  background: `url(${loginImage}) no-repeat center center/cover`  
-}
+  const ParentStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
+    height: "100vh",
+    overflow: "hidden",
+    position: "fixed",
+    width: "100vw",
+    background: `url(${loginImage}) no-repeat center center/cover`,
+  };
 
-const FormStyle={
-  display: "flex",
-  flexDirection: "column",
-  width: "40%",
-  padding: "30px",
-  backgroundColor: "rgba(255, 255, 255, 0.8)", // Transparent white for form
-  borderRadius: "15px",
-  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
-}
-useEffect(()=>{
-  const token = sessionStorage.getItem("jwtToken");
-  if(token)
-  {
-    navigate('/home')
-    return;
-  }
-},[])
+  const FormStyle = {
+    display: "flex",
+    flexDirection: "column",
+    width: "40%",
+    padding: "30px",
+    backgroundColor: "rgba(255, 255, 255, 0.8)", // Transparent white for form
+    borderRadius: "15px",
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Subtle shadow
+  };
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("jwtToken");
+    if (token) {
+      navigate("/home");
+      return;
+    }
+  }, []);
+
   return (
     <Box sx={ParentStyle}>
       <Box sx={FormStyle}>
-        <Typography variant="h4" gutterBottom color="primary" sx={{alignSelf:'center'}}>
-         Login
+        <Typography
+          variant="h4"
+          gutterBottom
+          color="primary"
+          sx={{ alignSelf: "center" }}>
+          Login
         </Typography>
         {!validate && (
           <Typography color="error" variant="body2">
@@ -158,13 +145,12 @@ useEffect(()=>{
             width: "100%",
             padding: "10px 0",
           }}
-          disabled={!isDisabled}
-        >
-        Login
+          disabled={!isDisabled}>
+          Login
         </Button>
         {error1 && <h6>{error1}</h6>}
       </Box>
-     </Box>
+    </Box>
   );
 };
 

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button, Modal, Box } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, setQuantities } from "../redux/userCartSlice";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearCart, setQuantities } from "../redux/userCartSlice";
+import { Button, Modal, Box } from "@mui/material";
 
 const CartPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,9 +46,6 @@ const CartPage = () => {
     0
   );
 
-  console.log(totalProducts, "totalProducts");
-  console.log(cartData, "cartData");
-
   return (
     <div
       style={{
@@ -79,15 +76,12 @@ const CartPage = () => {
           Cart: {cartData.productsIncart.length} items
           {cartData.productsIncart.length === 0 && (
             <Button
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                mt: 10,
-              }}
               variant="text"
-              href="/home">
-              Add Some items
+              color="primary"
+              onClick={() => navigate("/home")}
+              size="large"
+              sx={{ padding: "10px 20px", mt: 10 }}>
+              Add Items
             </Button>
           )}
         </h2>

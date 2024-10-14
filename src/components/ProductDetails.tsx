@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { addToCart, setQuantities } from "../redux/userCartSlice";
 import {
   Card,
   CardMedia,
@@ -13,21 +14,14 @@ import {
 import { AddShoppingCart } from "@mui/icons-material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
-import { addToCart, setQuantities } from "../redux/userCartSlice";
 
-
-const ProductDetail:React.FC = () => {
+const ProductDetail: React.FC = () => {
   const [product, setProduct] = useState<any>({});
   const { id: i } = useParams();
 
-  //   const data = useSelector((state) => state.cart);
-  const state = useSelector((state:any) => state);
+  const state = useSelector((state: any) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  //  const cartData = useSelector((state) => state.cart);
-  //   const navigate = useNavigate();
-
-  //   const cartItem = products.products?.findIndex((item) => item.id === id);
 
   useEffect(() => {
     const cartItem = state.state.products.find((obj) => obj.id === Number(i));
@@ -39,7 +33,7 @@ const ProductDetail:React.FC = () => {
     dispatch(addToCart(product));
   };
 
-  const handleIncreaseQuantity = (id:number) => {
+  const handleIncreaseQuantity = (id: number) => {
     dispatch(setQuantities({ type: "increment", id }));
   };
 
@@ -53,11 +47,10 @@ const ProductDetail:React.FC = () => {
         margin: "20px",
         display: "flex",
         justifyContent: "center",
-      }}
-    >
+      }}>
       <Card
         sx={{
-          width: '65vw',
+          width: "65vw",
           margin: "20px",
           boxShadow: "0 6px 15px rgba(0, 0, 0, 0.1)",
           borderRadius: "15px",
@@ -65,8 +58,7 @@ const ProductDetail:React.FC = () => {
           "&:hover": {
             transform: "scale(1.05)",
           },
-        }}
-      >
+        }}>
         {/* Product Image */}
         <CardMedia
           component="img"
@@ -79,19 +71,16 @@ const ProductDetail:React.FC = () => {
         {/* Product Content */}
         <CardContent sx={{ padding: "16px" }}>
           {/* Title */}
-          <Typography gutterBottom variant="h5" component="div" >
+          <Typography gutterBottom variant="h5" component="div">
             {product?.title}
           </Typography>
-            {/* description */}
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          {/* description */}
+          <Typography variant="body2" sx={{ color: "text.secondary" }}>
             {product?.description}
           </Typography>
 
           {/* Price */}
-          <Typography
-            variant="h5"
-            sx={{mt:4}}
-          >
+          <Typography variant="h5" sx={{ mt: 4 }}>
             ${product?.price}
           </Typography>
         </CardContent>
@@ -103,8 +92,7 @@ const ProductDetail:React.FC = () => {
             justifyContent: "flex-end",
             alignItems: "center",
             padding: "16px",
-          }}
-        >
+          }}>
           {/* If item is not in the cart, show "Add to Cart" */}
           {!state.cart.quantities[product?.id] ? (
             <IconButton
@@ -116,8 +104,7 @@ const ProductDetail:React.FC = () => {
                 "&:hover": {
                   backgroundColor: "#ffb74d",
                 },
-              }}
-            >
+              }}>
               <AddShoppingCart />
             </IconButton>
           ) : (
@@ -131,8 +118,7 @@ const ProductDetail:React.FC = () => {
                   "&:hover": {
                     backgroundColor: "#ef5350",
                   },
-                }}
-              >
+                }}>
                 <RemoveIcon />
               </IconButton>
 
@@ -144,13 +130,12 @@ const ProductDetail:React.FC = () => {
               <IconButton
                 onClick={() => handleIncreaseQuantity(product?.id)}
                 sx={{
-                    backgroundColor: "#4caf50",
+                  backgroundColor: "#4caf50",
                   color: "white",
                   "&:hover": {
                     backgroundColor: "#66bb6a",
                   },
-                }}
-              >
+                }}>
                 <AddIcon />
               </IconButton>
               <Button
@@ -159,14 +144,13 @@ const ProductDetail:React.FC = () => {
                 onClick={() => navigate("/cartPage")}
                 sx={{
                   position: "relative",
-                   left: "10px",
-                   right: '16px',
+                  left: "10px",
+                  right: "16px",
                   backgroundColor: "#1976d2",
                   "&:hover": {
                     backgroundColor: "#1565c0",
                   },
-                }}
-              >
+                }}>
                 Go to Cart
               </Button>
             </Box>

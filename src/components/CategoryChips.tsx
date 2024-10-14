@@ -1,4 +1,4 @@
-import React,{ useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setAllProducts } from "../redux/userSlice";
@@ -10,7 +10,7 @@ function CategoryChips() {
   const [activeChip, setActiveChip] = useState("All Products");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const data = useSelector((state:any) => state.state);
+  const data = useSelector((state: any) => state.state);
 
   const fetchCategories = () => {
     fetch("https://fakestoreapi.com/products/categories")
@@ -29,10 +29,6 @@ function CategoryChips() {
       fetchProducts();
       navigate(`/home}`);
     } else {
-      // fetch(`https://fakestoreapi.com/products/category/${category}`)
-      //   .then((res) => res.json())
-      //   .then((json) => dispatch(setAllProducts(json)));
-
       navigate(`/${category}`);
     }
     setActiveChip(category);
@@ -42,11 +38,9 @@ function CategoryChips() {
     fetchCategories();
     fetchProducts();
   }, []);
-console.log('categories_______', categories)
+
   return (
     <div style={{ margin: "50px" }}>
-      {/* Category Chips Section */}
-      
       <Stack direction="row" spacing={1} sx={{ marginBottom: "30px" }}>
         {categories?.map((category, index) => (
           <Chip

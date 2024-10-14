@@ -1,4 +1,6 @@
-import React  from "react";
+import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -6,34 +8,29 @@ import {
   CardActions,
   Button,
 } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
-const UserDetails:React.FC = () => {
-  const data = useSelector((state:any) => state.state);
+const UserDetails: React.FC = () => {
+  const data = useSelector((state: any) => state.state);
   const navigate = useNavigate();
 
   const { name, email, username, phone, address } = data.user;
-const cardStyle={
-  maxWidth: 400,
-  margin: "20px auto",
-  boxShadow: "0 6px 15px rgba(0, 0, 0, 0.2)",
-  borderRadius: "15px",
-  overflow: "hidden",
-  background: "linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%)",
-}
+  const cardStyle = {
+    maxWidth: 400,
+    margin: "20px auto",
+    boxShadow: "0 6px 15px rgba(0, 0, 0, 0.2)",
+    borderRadius: "15px",
+    overflow: "hidden",
+    background: "linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%)",
+  };
   return (
-    <Card
-      sx={cardStyle}
-    >
+    <Card sx={cardStyle}>
       <CardContent
         sx={{
           padding: "30px",
           background: "white",
           borderTopLeftRadius: "15px",
           borderTopRightRadius: "15px",
-        }}
-      >
+        }}>
         {/* Full Name */}
         <Typography
           gutterBottom
@@ -43,8 +40,7 @@ const cardStyle={
             color: "#3f51b5",
             fontWeight: 700,
             textTransform: "capitalize",
-          }}
-        >
+          }}>
           {name.firstname} {name.lastname}
         </Typography>
 
@@ -54,8 +50,7 @@ const cardStyle={
           sx={{
             color: "#555",
             marginBottom: "8px",
-          }}
-        >
+          }}>
           <strong>Email:</strong> {email}
         </Typography>
 
@@ -65,8 +60,7 @@ const cardStyle={
           sx={{
             color: "#555",
             marginBottom: "8px",
-          }}
-        >
+          }}>
           <strong>Username:</strong> {username}
         </Typography>
 
@@ -76,8 +70,7 @@ const cardStyle={
           sx={{
             color: "#555",
             marginBottom: "8px",
-          }}
-        >
+          }}>
           <strong>Phone:</strong> {phone}
         </Typography>
 
@@ -87,8 +80,7 @@ const cardStyle={
           sx={{
             color: "#555",
             marginBottom: "8px",
-          }}
-        >
+          }}>
           <strong>Address:</strong> {address.number} {address.street},{" "}
           {address.city}, {address.zipcode}
         </Typography>
@@ -98,8 +90,7 @@ const cardStyle={
           variant="body2"
           sx={{
             color: "#555",
-          }}
-        >
+          }}>
           <strong>Geolocation:</strong> Lat: {address.geolocation.lat}, Long:{" "}
           {address.geolocation.long}
         </Typography>
@@ -111,8 +102,7 @@ const cardStyle={
           justifyContent: "center",
           padding: "20px",
           background: "#3f51b5",
-        }}
-      >
+        }}>
         <Button
           size="large"
           variant="contained"
@@ -126,8 +116,7 @@ const cardStyle={
               background: "#ff7f00",
             },
           }}
-          onClick={() => navigate("/home")}
-        >
+          onClick={() => navigate("/home")}>
           Back to Home
         </Button>
       </CardActions>
